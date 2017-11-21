@@ -24,13 +24,26 @@
 
 #include "toml.hpp"
 
-#include <optional>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 
+#ifdef __APPLE__
+#include <experimental/optional>
+#else
+#include <optional>
+#endif
+
 namespace eos {
 namespace core {
+
+#ifdef __APPLE__
+using std::experimental::optional;
+using std::experimental::nullopt;
+#else
+using std::optional;
+using std::nullopt;
+#endif
 
 /**
  * @brief Represents a mapping from one kind of landmarks
@@ -102,7 +115,7 @@ public:
      * @param[in] landmark_name A landmark name to convert.
      * @return The mapped landmark name if a mapping exists, an empty optional otherwise.
      */
-    std::optional<std::string> convert(std::string landmark_name) const
+    optional<std::string> convert(std::string landmark_name) const
     {
         if (landmark_mappings.empty())
         {
@@ -117,7 +130,7 @@ public:
             return converted_landmark->second;
         } else
         { // landmark_name does not match the key of any element in the map
-            return std::nullopt;
+            return nullopt;
         }
     };
 
